@@ -12,6 +12,12 @@ Short interaction in [Timelines](https://timelinesapp.io), the original creator'
 
 ShowTouches is available through [Swift Package Manager](https://swift.org/package-manager/). To install it, simply add the url of this repository through `Xcode -> File -> Swift Packages -> Add Package Dependency...`
 
+It is also available through [CocoaPods](http://cocoapods.org/), just add this line to your Podfile:
+
+```ruby
+pod 'ShowTouches', :configurations => ['Debug']
+```
+
 ## How to set it up
 
 Just call `UIWindow.startShowingTouches()` anywhere in your app. (Also works with SwiftUI using [App](https://developer.apple.com/documentation/swiftui/app) and [WindowGroup](https://developer.apple.com/documentation/swiftui/windowgroup) added in Xcode 12.0)

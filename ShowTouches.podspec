@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 	s.name = 'ShowTouches'
 	s.version = ENV["RELEASE_VERSION"]
-	s.license = 'MIT'
+	s.license = { :type => 'MIT', :file => 'LICENSE.md' }
 	s.summary = 'Visualize touches.'
 	s.homepage = 'https://github.com/Cyberbeni/ShowTouches'
 	s.authors = { 'Benedek Kozma' => 'cyberbeni@gmail.com' }

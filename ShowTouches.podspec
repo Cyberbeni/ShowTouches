@@ -2,10 +2,10 @@ Pod::Spec.new do |s|
 	s.name = 'ShowTouches'
 	s.version = ENV["RELEASE_VERSION"]
 	s.license = 'MIT'
-	s.summary = 'Swiftier version of Apple\'s NotificationCenter.'
-	s.homepage = 'https://github.com/Cyberbeni/TypedNotificationCenter'
+	s.summary = 'Visualize touches.'
+	s.homepage = 'https://github.com/Cyberbeni/ShowTouches'
 	s.authors = { 'Benedek Kozma' => 'cyberbeni@gmail.com' }
-	s.source = { :git => 'https://github.com/Cyberbeni/TypedNotificationCenter.git', :tag => 'v' + s.version.to_s }
+	s.source = { :git => 'https://github.com/Cyberbeni/ShowTouches.git', :tag => 'v' + s.version.to_s }
  
 	s.ios.deployment_target = '8.0'
  

@@ -12,6 +12,7 @@ jobs:
       uses: Cyberbeni/install-swift-tool@v2
       with:
         url: https://github.com/nicklockwood/SwiftFormat
+        version: '*'
     - name: Format
       run: swiftformat .
     - name: Commit

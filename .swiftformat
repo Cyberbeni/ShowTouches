@@ -1,0 +1,7 @@
+--swiftversion 5.3
+
+--maxwidth 200
+--indent tab
+--tabwidth 3
+
+--enable isEmpty

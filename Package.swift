@@ -4,18 +4,20 @@
 import PackageDescription
 
 let package = Package(
-    name: "ShowTouches",
+	name: "ShowTouches",
 	platforms: [
 		.iOS(.v8),
-    ],
-    products: [
-        .library(
-            name: "ShowTouches",
-            targets: ["ShowTouches"]),
-    ],
-    targets: [
-        .target(
-            name: "ShowTouches",
-            dependencies: []),
-    ]
+	],
+	products: [
+		.library(
+			name: "ShowTouches",
+			targets: ["ShowTouches"]
+		),
+	],
+	targets: [
+		.target(
+			name: "ShowTouches",
+			dependencies: []
+		),
+	]
 )

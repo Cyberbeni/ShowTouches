@@ -10,8 +10,8 @@ struct Constants {
 
 class ShowTouchesController {
 	let touchImageViewQueue = GSTouchImageViewQueue(touchesCount: 8)
-	var touchImgViewsDict = [String: UIView]()
-	var touchesStartDateDict = [String: NSDate]()
+	var touchImgViewsDict = [ObjectIdentifier: UIView]()
+	var touchesStartDateDict = [ObjectIdentifier: NSDate]()
 
 	public func touchBegan(_ touch: UITouch, view: UIView) {
 		let touchImgView = touchImageViewQueue.popTouchImageView()
@@ -27,7 +27,7 @@ class ShowTouchesController {
 			touchImgView.transform = CGAffineTransform(scaleX: 1, y: 1)
 		}
 
-		touchesStartDateDict[String(format: "%p", touch)] = NSDate()
+		touchesStartDateDict[ObjectIdentifier(touch)] = NSDate()
 	}
 
 	public func touchMoved(_ touch: UITouch, view: UIView) {
@@ -35,9 +35,9 @@ class ShowTouchesController {
 	}
 
 	public func touchEnded(_ touch: UITouch, view: UIView) {
-		guard let touchStartDate = touchesStartDateDict[String(format: "%p", touch)], let touchImgView = touchImageView(for: touch) else { return }
+		guard let touchStartDate = touchesStartDateDict[ObjectIdentifier(touch)], let touchImgView = touchImageView(for: touch) else { return }
 		let touchDuration = NSDate().timeIntervalSince(touchStartDate as Date)
-		touchesStartDateDict.removeValue(forKey: String(format: "%p", touch))
+		touchesStartDateDict.removeValue(forKey: ObjectIdentifier(touch))
 
 		if touchDuration < Constants.ShortTapTresholdDuration {
 			showExpandingCircle(at: touch.location(in: view), in: view)
@@ -103,34 +103,42 @@ class ShowTouchesController {
 	}
 
 	func touchImageView(for touch: UITouch) -> UIView? {
-		touchImgViewsDict[String(format: "%p", touch)]
+		touchImgViewsDict[ObjectIdentifier(touch)]
 	}
 
 	func setTouchImageView(_ touchImageView: UIView, for touch: UITouch) {
-		touchImgViewsDict[String(format: "%p", touch)] = touchImageView
+		touchImgViewsDict[ObjectIdentifier(touch)] = touchImageView
 	}
 
 	func removeTouchImageView(for touch: UITouch) {
-		touchImgViewsDict.removeValue(forKey: String(format: "%p", touch))
+		touchImgViewsDict.removeValue(forKey: ObjectIdentifier(touch))
 	}
 }
 
 class GSTouchImageViewQueue {
-	var backingArray = [UIView]()
+	private var backingArray = [UIView]()
 
 	convenience init(touchesCount: Int) {
 		self.init()
 
 		for _ in 0 ..< touchesCount {
-			let imageView = UIView(frame: CGRect(x: 0, y: 0, width: Constants.CircleSize, height: Constants.CircleSize))
-			imageView.backgroundColor = Constants.TouchColor
-			imageView.layer.cornerRadius = Constants.CircleSize / 2
-			backingArray.append(imageView)
+			backingArray.append(createCircle())
 		}
+	}
+	
+	private func createCircle() -> UIView {
+		let imageView = UIView(frame: CGRect(x: 0, y: 0, width: Constants.CircleSize, height: Constants.CircleSize))
+		imageView.backgroundColor = Constants.TouchColor
+		imageView.layer.cornerRadius = Constants.CircleSize / 2
+		return imageView
 	}
 
 	func popTouchImageView() -> UIView {
-		backingArray.removeFirst()
+		if let imageView = backingArray.popLast() {
+			return imageView
+		} else {
+			return createCircle()
+		}
 	}
 
 	func push(_ touchImageView: UIView) {

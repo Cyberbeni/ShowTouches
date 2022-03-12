@@ -7,17 +7,4 @@ on:
 
 jobs:
   swiftformat:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Install SwiftFormat
-      uses: Cyberbeni/install-swift-tool@v2
-      with:
-        url: https://github.com/nicklockwood/SwiftFormat
-        version: '*'
-    - name: Format
-      run: swiftformat .
-    - name: Commit
-      if: github.event_name == 'pull_request'
-      uses: EndBug/add-and-commit@v5
+    uses: Cyberbeni/workflows/.github/workflows/swiftformat-fix-and-commit.yml@master

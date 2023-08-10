@@ -1,9 +1,10 @@
 import UIKit
 
 public class ShowTouchesGestureRecognizer: UIGestureRecognizer, UIGestureRecognizerDelegate {
-	let touchesShowingController = ShowTouchesController()
-
-	public init() {
+	let touchesShowingController: ShowTouchesController
+	
+	public init(config: ShowTouchesConfig = ShowTouchesConfig()) {
+		touchesShowingController = ShowTouchesController(config: config)
 		super.init(target: nil, action: nil)
 		cancelsTouchesInView = false
 		delaysTouchesBegan = false

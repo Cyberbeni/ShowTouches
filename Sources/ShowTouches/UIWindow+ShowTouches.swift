@@ -3,10 +3,12 @@ import UIKit
 
 extension UIWindow {
 	static var touchesShowingControllerKey = 0
+	private static var config: ShowTouchesConfig = ShowTouchesConfig()
+	
 	var controller: ShowTouchesController {
 		var controller: ShowTouchesController? = objc_getAssociatedObject(self, &UIWindow.touchesShowingControllerKey) as? ShowTouchesController
 		if controller == nil {
-			controller = ShowTouchesController()
+			controller = ShowTouchesController(config: Self.config)
 			objc_setAssociatedObject(self, &UIWindow.touchesShowingControllerKey, controller, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 		}
 		return controller!
@@ -32,17 +34,26 @@ extension UIWindow {
 			}
 		}
 	}
+	
+	public static func configure(_ config: ShowTouchesConfig) {
+		Self.config = config
+	}
 
-	static var didStart = false
-	@objc public static func startShowingTouches() {
-		guard !didStart else { return }
-		didStart = true
-
-		guard let originalMethod = class_getInstanceMethod(UIWindow.self, #selector(sendEvent(_:))),
-		      let newMethod = class_getInstanceMethod(UIWindow.self, #selector(showTouches_sendEvent(_:)))
+	static var isShowingTouches = false
+	@objc public static func showTouches(_ show: Bool = true) {
+		guard isShowingTouches != show,
+			  let originalMethod = class_getInstanceMethod(UIWindow.self, #selector(sendEvent(_:))),
+			  let newMethod = class_getInstanceMethod(UIWindow.self, #selector(showTouches_sendEvent(_:)))
 		else {
 			return
 		}
+
+		isShowingTouches = !isShowingTouches
 		method_exchangeImplementations(originalMethod, newMethod)
+	}
+
+	@available(*, deprecated, message: "Use 'showTouches()' instead.")
+	@objc public static func startShowingTouches() {
+		showTouches()
 	}
 }

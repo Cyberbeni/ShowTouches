@@ -20,17 +20,41 @@ pod 'ShowTouches', :configurations => ['Debug']
 
 ## How to set it up
 
-Just call `UIWindow.startShowingTouches()` anywhere in your app. (Also works with SwiftUI using [App](https://developer.apple.com/documentation/swiftui/app) and [WindowGroup](https://developer.apple.com/documentation/swiftui/windowgroup) added in Xcode 12.0)
+Just call `UIWindow.showTouches()` or `UIWindow.showTouches(false)` anywhere in your app to enable or disable showing touches. (Also works with SwiftUI using [App](https://developer.apple.com/documentation/swiftui/app) and [WindowGroup](https://developer.apple.com/documentation/swiftui/windowgroup) added in Xcode 12.0)
 
 And that's it!
 
+### Customization
+
+You may want to customize how touches are shown. Just call `UIWindow.configure()` passing a `ShowTouchesConfig` to override defaults. 
+
+⚠️ This must be done before the first call to `UIWindow.showTouches()`. ⚠️
+
+E.g.
+
+```swift
+let config = ShowTouchesConfig(touchColor: .green)
+UIWindow.configure(config)
+// [...]
+UIWindow.showTouches()
+``` 
+
 ### App Extensions
 
-If you are using App Extensions (such as Action extension or Keyboard extension), you can also show touches in them. Calling `UIWindow.startShowingTouches()` should work for those too.
+If you are using App Extensions (such as Action extension or Keyboard extension), you can also show touches in them. Calling `UIWindow.showTouches()` should work for those too.
 
 ### Only showing for specific views
 
-If you only want to display touches for specific views (or the other method doesn't work for you), a gesture recognizer is also available: `view.addGestureRecognizer(ShowTouchesGestureRecognizer())`
+If you only want to display touches for specific views (or the other method doesn't work for you), a gesture recognizer is also available: `view.addGestureRecognizer(ShowTouchesGestureRecognizer())`. 
+
+This can also be customized passing a `ShowTouchesConfig`.
+
+E.g.
+
+```swift
+let config = ShowTouchesConfig(touchColor: .green)
+view.addGestureRecognizer(ShowTouchesGestureRecognizer(config))
+``` 
 
 ## How it actually works
 

@@ -38,20 +38,19 @@ extension UIWindow {
 	public static func configure(_ config: ShowTouchesConfig) {
 		Self.config = config
 	}
-	
+
+	static var isShowingTouches = false
 	@objc public static func showTouches(_ show: Bool = true) {
-		guard let originalMethod = class_getInstanceMethod(UIWindow.self, #selector(sendEvent(_:))),
-		      let newMethod = class_getInstanceMethod(UIWindow.self, #selector(showTouches_sendEvent(_:)))
+		guard isShowingTouches != show,
+			  let originalMethod = class_getInstanceMethod(UIWindow.self, #selector(sendEvent(_:))),
+			  let newMethod = class_getInstanceMethod(UIWindow.self, #selector(showTouches_sendEvent(_:)))
 		else {
 			return
 		}
-		
-		if show {
-			method_exchangeImplementations(originalMethod, newMethod)
-		} else {
-			method_exchangeImplementations(newMethod, originalMethod)
-		}
-	}	
+
+		isShowingTouches = !isShowingTouches
+		method_exchangeImplementations(originalMethod, newMethod)
+	}
 
 	@available(*, deprecated, message: "Use 'showTouches()' instead.")
 	@objc public static func startShowingTouches() {

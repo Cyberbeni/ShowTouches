@@ -6,12 +6,13 @@ public struct ShowTouchesConfig {
 	let shortTapTresholdDuration: Double
 	let shortTapInitialCircleRadius: CGFloat
 	let shortTapFinalCircleRadius: CGFloat
-	
+
 	public init(touchColor: UIColor = UIColor(red: 0.0 / 255, green: 135.0 / 255, blue: 244.0 / 255, alpha: 0.8),
-				circleSize: CGFloat = 61.0,
-				shortTapTresholdDuration: Double = 0.11,
-				shortTapInitialCircleRadius: CGFloat = 22.0,
-				shortTapFinalCircleRadius: CGFloat = 57.0) {
+	            circleSize: CGFloat = 61.0,
+	            shortTapTresholdDuration: Double = 0.11,
+	            shortTapInitialCircleRadius: CGFloat = 22.0,
+	            shortTapFinalCircleRadius: CGFloat = 57.0)
+	{
 		self.touchColor = touchColor
 		self.circleSize = circleSize
 		self.shortTapTresholdDuration = shortTapTresholdDuration
@@ -25,12 +26,12 @@ class ShowTouchesController {
 	var touchImgViewsDict = [String: UIView]()
 	var touchesStartDateDict = [String: NSDate]()
 	let config: ShowTouchesConfig
-	
+
 	init(config: ShowTouchesConfig) {
 		self.config = config
 		touchImageViewQueue = GSTouchImageViewQueue(touchesCount: 8, config: config)
 	}
-	
+
 	public func touchBegan(_ touch: UITouch, view: UIView) {
 		let touchImgView = touchImageViewQueue.popTouchImageView()
 		touchImgView.center = touch.location(in: view)

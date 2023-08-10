@@ -3,8 +3,8 @@ import UIKit
 
 extension UIWindow {
 	static var touchesShowingControllerKey = 0
-	private static var config: ShowTouchesConfig = ShowTouchesConfig()
-	
+	private static var config: ShowTouchesConfig = .init()
+
 	var controller: ShowTouchesController {
 		var controller: ShowTouchesController? = objc_getAssociatedObject(self, &UIWindow.touchesShowingControllerKey) as? ShowTouchesController
 		if controller == nil {
@@ -34,7 +34,7 @@ extension UIWindow {
 			}
 		}
 	}
-	
+
 	public static func configure(_ config: ShowTouchesConfig) {
 		Self.config = config
 	}
@@ -42,8 +42,8 @@ extension UIWindow {
 	static var isShowingTouches = false
 	@objc public static func showTouches(_ show: Bool = true) {
 		guard isShowingTouches != show,
-			  let originalMethod = class_getInstanceMethod(UIWindow.self, #selector(sendEvent(_:))),
-			  let newMethod = class_getInstanceMethod(UIWindow.self, #selector(showTouches_sendEvent(_:)))
+		      let originalMethod = class_getInstanceMethod(UIWindow.self, #selector(sendEvent(_:))),
+		      let newMethod = class_getInstanceMethod(UIWindow.self, #selector(showTouches_sendEvent(_:)))
 		else {
 			return
 		}

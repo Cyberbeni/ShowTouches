@@ -1,18 +1,36 @@
 import UIKit
 
-struct Constants {
-	static let TouchColor = UIColor(red: 0.0 / 255, green: 135.0 / 255, blue: 244.0 / 255, alpha: 0.8)
-	static let CircleSize: CGFloat = 61.0
-	static let ShortTapTresholdDuration = 0.11
-	static let ShortTapInitialCircleRadius: CGFloat = 22.0
-	static let ShortTapFinalCircleRadius: CGFloat = 57.0
+public struct ShowTouchesConfig {
+	let touchColor: UIColor
+	let circleSize: CGFloat
+	let shortTapTresholdDuration: Double
+	let shortTapInitialCircleRadius: CGFloat
+	let shortTapFinalCircleRadius: CGFloat
+	
+	public init(touchColor: UIColor = UIColor(red: 0.0 / 255, green: 135.0 / 255, blue: 244.0 / 255, alpha: 0.8),
+				circleSize: CGFloat = 61.0,
+				shortTapTresholdDuration: Double = 0.11,
+				shortTapInitialCircleRadius: CGFloat = 22.0,
+				shortTapFinalCircleRadius: CGFloat = 57.0) {
+		self.touchColor = touchColor
+		self.circleSize = circleSize
+		self.shortTapTresholdDuration = shortTapTresholdDuration
+		self.shortTapInitialCircleRadius = shortTapInitialCircleRadius
+		self.shortTapFinalCircleRadius = shortTapFinalCircleRadius
+	}
 }
 
 class ShowTouchesController {
-	let touchImageViewQueue = GSTouchImageViewQueue(touchesCount: 8)
+	let touchImageViewQueue: GSTouchImageViewQueue
 	var touchImgViewsDict = [String: UIView]()
 	var touchesStartDateDict = [String: NSDate]()
-
+	let config: ShowTouchesConfig
+	
+	init(config: ShowTouchesConfig) {
+		self.config = config
+		touchImageViewQueue = GSTouchImageViewQueue(touchesCount: 8, config: config)
+	}
+	
 	public func touchBegan(_ touch: UITouch, view: UIView) {
 		let touchImgView = touchImageViewQueue.popTouchImageView()
 		touchImgView.center = touch.location(in: view)
@@ -39,7 +57,7 @@ class ShowTouchesController {
 		let touchDuration = NSDate().timeIntervalSince(touchStartDate as Date)
 		touchesStartDateDict.removeValue(forKey: String(format: "%p", touch))
 
-		if touchDuration < Constants.ShortTapTresholdDuration {
+		if touchDuration < config.shortTapTresholdDuration {
 			showExpandingCircle(at: touch.location(in: view), in: view)
 		}
 
@@ -56,8 +74,8 @@ class ShowTouchesController {
 
 	func showExpandingCircle(at position: CGPoint, in view: UIView) {
 		let circleLayer = CAShapeLayer()
-		let initialRadius = Constants.ShortTapInitialCircleRadius
-		let finalRadius = Constants.ShortTapFinalCircleRadius
+		let initialRadius = config.shortTapInitialCircleRadius
+		let finalRadius = config.shortTapFinalCircleRadius
 		circleLayer.position = CGPoint(x: position.x - initialRadius, y: position.y - initialRadius)
 
 		let startPathRect = CGRect(x: 0, y: 0, width: initialRadius * 2, height: initialRadius * 2)
@@ -69,7 +87,7 @@ class ShowTouchesController {
 
 		circleLayer.path = startPath.cgPath
 		circleLayer.fillColor = UIColor.clear.cgColor
-		circleLayer.strokeColor = Constants.TouchColor.cgColor
+		circleLayer.strokeColor = config.touchColor.cgColor
 		circleLayer.lineWidth = 2.0
 		view.layer.addSublayer(circleLayer)
 
@@ -118,13 +136,13 @@ class ShowTouchesController {
 class GSTouchImageViewQueue {
 	var backingArray = [UIView]()
 
-	convenience init(touchesCount: Int) {
+	convenience init(touchesCount: Int, config: ShowTouchesConfig) {
 		self.init()
 
 		for _ in 0 ..< touchesCount {
-			let imageView = UIView(frame: CGRect(x: 0, y: 0, width: Constants.CircleSize, height: Constants.CircleSize))
-			imageView.backgroundColor = Constants.TouchColor
-			imageView.layer.cornerRadius = Constants.CircleSize / 2
+			let imageView = UIView(frame: CGRect(x: 0, y: 0, width: config.circleSize, height: config.circleSize))
+			imageView.backgroundColor = config.touchColor
+			imageView.layer.cornerRadius = config.circleSize / 2
 			backingArray.append(imageView)
 		}
 	}

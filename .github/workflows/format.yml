@@ -8,3 +8,5 @@ on:
 jobs:
   swiftformat:
     uses: Cyberbeni/workflows/.github/workflows/swiftformat-fix-and-commit.yml@master
+    with:
+      version: '*'
